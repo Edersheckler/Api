@@ -1,0 +1,78 @@
+version: '3'
+services:
+
+  #PSQL Service
+  psql:
+    image: postgres   
+    container_name: psql   
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: homestead
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: homestead  
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    tty: true
+    ports:
+      - 5432:5432
+    networks:
+      - lumen-net
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: lumen-api
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: api
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./api:/var/www
+    networks:
+      - lumen-net
+    depends_on:
+      - psql
+  
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 8200:8080
+    volumes:
+      - ./api:/var/www
+      - ./nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf
+    networks:
+      - lumen-net
+    depends_on:
+      - psql
+
+  #Adminer Service
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    depends_on:
+      - psql
+    environment:
+        PGADMIN_DEFAULT_PASSWORD: secret
+        PGADMIN_DEFAULT_EMAIL: mail@email.com
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    networks:
+      - lumen-net
+
+#Volumes
+volumes:
+  dbdata:
+
+networks:
+  lumen-net:
+    driver: bridge
+    
