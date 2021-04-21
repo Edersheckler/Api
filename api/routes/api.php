@@ -13,5 +13,7 @@
 |
 */
 
-$router->get('/usuarios', 'UsuarioController@getall');
 
+#$router->group(['prefix' => 'usuarios'], function () use ($router) {
+#    $router->get('{id}', 'UsuarioController@getbyId');
+#});
