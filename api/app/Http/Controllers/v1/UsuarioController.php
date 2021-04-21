@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Models\Usuarios;
 use Illuminate\Http\Request;
+use App\HTTP\Resources\UsuarioResource;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class UsuarioController extends BaseController
@@ -36,6 +37,9 @@ class UsuarioController extends BaseController
     public function create(
         Request $request
     ) {
+        #dd($request->all());
+        $usuario = Usuarios::create($request->all());
+        return response()->create($usuario);
     }
 
     /**
