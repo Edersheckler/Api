@@ -56,15 +56,27 @@ class UsuarioController extends BaseController
      * Update by id  
      */
     public function updateById(
-        $id
+       $id,
+       Request $request
     ) {
+        #dd($request->all());
+        #$id->update($request->all());
+        $this->repository->where('id',$id)
+                    ->update($request->all());
+        return response()->data($id);
+
     }
 
     /**
      * Delete by id  
      */
     public function deleteById(
-        $id
+        $id,
+        Request $request
     ) {
+        $this->repository->where('id',$id)
+                    ->delete($request->all());
+        return response()->data($id);
+
     }
 }
