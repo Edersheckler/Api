@@ -14,7 +14,7 @@ class UsuariosTableSeeder extends Seeder
     {
        
 
-        factory(Usuarios::class, 10)->create();
+        factory(Usuarios::class, 70)->create();
      
 
        
